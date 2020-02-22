@@ -1,7 +1,7 @@
 package com.appsdeveloperblog.app.ws.shared.dto;
 
 public class AddressDTO {
-	private long id;
+	private Long id;
 	private String addressId;
 	private String city;
 	private String country;
@@ -10,11 +10,11 @@ public class AddressDTO {
 	private String type;
 	private UserDto userDetails;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

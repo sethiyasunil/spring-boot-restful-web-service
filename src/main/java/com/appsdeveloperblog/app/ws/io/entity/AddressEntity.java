@@ -16,7 +16,7 @@ public class AddressEntity implements Serializable {
 	
 	@Id
 	@GeneratedValue
-	private long id;
+	private Long id;
 	
 	@Column(length=30, nullable=false)
 	private String addressId;
@@ -40,11 +40,11 @@ public class AddressEntity implements Serializable {
 	@JoinColumn(name="users_id")
 	private UserEntity userDetails;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

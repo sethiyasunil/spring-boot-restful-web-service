@@ -19,7 +19,7 @@ public class UserEntity implements Serializable {
 	
 	@Id
 	@GeneratedValue
-	private long id;
+	private Long id;
 	
 	@Column(nullable=false)
 	private String userId;
@@ -40,6 +40,7 @@ public class UserEntity implements Serializable {
 	
 	@Column(nullable=false)
 	private Boolean emailVerificationStatus = false;
+
 	
 	@OneToMany(mappedBy="userDetails", cascade=CascadeType.ALL)
 	private List<AddressEntity> addresses;
@@ -107,6 +108,7 @@ public class UserEntity implements Serializable {
 	public void setEmailVerificationStatus(Boolean emailVerificationStatus) {
 		this.emailVerificationStatus = emailVerificationStatus;
 	}
+
 
 	public List<AddressEntity> getAddresses() {
 		return addresses;

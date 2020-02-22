@@ -17,9 +17,12 @@ public class UserDto implements Serializable{
     private Boolean emailVerificationStatus = false;
     private List<AddressDTO> addresses;
     
+
+    
 	public long getId() {
 		return id;
 	}
+	
 	public void setId(long id) {
 		this.id = id;
 	}

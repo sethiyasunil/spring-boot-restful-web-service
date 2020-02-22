@@ -1,0 +1,27 @@
+create database photo_app;
+
+CREATE TABLE IF NOT EXISTS `photo_app`.`users` (
+  `id` BIGINT NOT NULL,
+  `email` VARCHAR(120) NOT NULL,
+  `email_verification_status` BIT(1) NOT NULL,
+  `email_verification_token` VARCHAR(255) NULL DEFAULT NULL,
+  `encrypted_password` VARCHAR(255) NOT NULL,
+  `first_name` VARCHAR(50) NOT NULL,
+  `last_name` VARCHAR(50) NOT NULL,
+  `user_id` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+  
+CREATE TABLE IF NOT EXISTS `photo_app`.`addresses` (
+  `id` BIGINT NOT NULL primary key,
+  `address_id` VARCHAR(30) NOT NULL,
+  `city` VARCHAR(15) NOT NULL,
+  `country` VARCHAR(15) NOT NULL,
+  `postal_code` VARCHAR(7) NOT NULL,
+  `street_name` VARCHAR(100) NOT NULL,
+  `type` VARCHAR(10) NOT NULL,
+  `users_id` BIGINT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`));
+  
+  
+insert into `users`(id, email, email_verification_status, email_verification_token, encrypted_password, first_name, last_name, user_id)
+values(9999, 'manoj.sethiya@yahoo.com', 1, NULL, '$2a$10$jZxemOuC2gdlB/fHROX2k.Du0WGuu81jnATC/dk6uPczeTEEBPel6', 'manoj', 'sethiya', 'uEbK1klf672Y7QEzR5Em52BUGYsnGn');

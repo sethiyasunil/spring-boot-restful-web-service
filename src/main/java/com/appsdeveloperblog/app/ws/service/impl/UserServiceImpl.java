@@ -3,10 +3,11 @@ package com.appsdeveloperblog.app.ws.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
@@ -14,13 +15,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.appsdeveloperblog.app.ws.exceptions.UserServiceException;
 import com.appsdeveloperblog.app.ws.io.entity.PasswordResetTokenEntity;
 import com.appsdeveloperblog.app.ws.io.entity.UserEntity;
 import com.appsdeveloperblog.app.ws.io.repository.PasswordResetTokenRepository;
 import com.appsdeveloperblog.app.ws.io.repository.UserRepository;
+//import org.springframework.transaction.annotation.Transactional;
+//
+//import com.appsdeveloperblog.app.ws.exceptions.UserServiceException;
+//import com.appsdeveloperblog.app.ws.io.entity.PasswordResetTokenEntity;
+//import com.appsdeveloperblog.app.ws.io.entity.UserEntity;
+//import com.appsdeveloperblog.app.ws.io.repository.PasswordResetTokenRepository;
+//import com.appsdeveloperblog.app.ws.io.repository.UserRepository;
 import com.appsdeveloperblog.app.ws.service.UserService;
 import com.appsdeveloperblog.app.ws.shared.AmazonSES;
 import com.appsdeveloperblog.app.ws.shared.Utils;
@@ -48,10 +55,10 @@ public class UserServiceImpl implements UserService {
  
 	@Override
 	public UserDto createUser(UserDto user) {
-
+		
 		if (userRepository.findByEmail(user.getEmail()) != null)
-			throw new UserServiceException("Record already exists");
-
+		throw new UserServiceException("Record already exists");		
+		
 		for(int i=0;i<user.getAddresses().size();i++)
 		{
 			AddressDTO address = user.getAddresses().get(i);
@@ -59,24 +66,22 @@ public class UserServiceImpl implements UserService {
 			address.setAddressId(utils.generateAddressId(30));
 			user.getAddresses().set(i, address);
 		}
-		  
-		//BeanUtils.copyProperties(user, userEntity);
+		
 		ModelMapper modelMapper = new ModelMapper();
 		UserEntity userEntity = modelMapper.map(user, UserEntity.class);
-
+		
 		String publicUserId = utils.generateUserId(30);
 		userEntity.setUserId(publicUserId);
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(publicUserId));
-
-		UserEntity storedUserDetails = userRepository.save(userEntity);
- 
-		//BeanUtils.copyProperties(storedUserDetails, returnValue);
+		userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(publicUserId));		
+		userEntity.setEmailVerificationStatus(Boolean.FALSE);
+		UserEntity storedUserDetails  = userRepository.save(userEntity);
+		
 		UserDto returnValue  = modelMapper.map(storedUserDetails, UserDto.class);
 		
-        // Send an email message to user to verify their email address
+//        // Send an email message to user to verify their email address
 		amazonSES.verifyEmail(returnValue);
-
+		
 		return returnValue;
 	}
 
@@ -105,7 +110,6 @@ public class UserServiceImpl implements UserService {
 				true, true,
 				true, new ArrayList<>());
 
-		//return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
 	}
 
 	@Override
@@ -159,8 +163,9 @@ public class UserServiceImpl implements UserService {
 		
 		Pageable pageableRequest = PageRequest.of(page, limit);
 		
-		Page<UserEntity> usersPage = userRepository.findAll(pageableRequest);
-		List<UserEntity> users = usersPage.getContent();
+		//Page<UserEntity> usersPage = userRepository.findAll(pageableRequest);
+		//List<UserEntity> users = usersPage.getContent();
+		Iterable<UserEntity> users = userRepository.findAll();
 		
         for (UserEntity userEntity : users) {
             UserDto userDto = new UserDto();
@@ -202,14 +207,14 @@ public class UserServiceImpl implements UserService {
             return returnValue;
         }
         
-        String token = new Utils().generatePasswordResetToken(userEntity.getUserId());
+        String token = utils.generatePasswordResetToken(userEntity.getUserId());
         
         PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
         passwordResetTokenEntity.setToken(token);
         passwordResetTokenEntity.setUserDetails(userEntity);
         passwordResetTokenRepository.save(passwordResetTokenEntity);
         
-        returnValue = new AmazonSES().sendPasswordResetRequest(
+        returnValue = amazonSES.sendPasswordResetRequest(
                 userEntity.getFirstName(), 
                 userEntity.getEmail(),
                 token);

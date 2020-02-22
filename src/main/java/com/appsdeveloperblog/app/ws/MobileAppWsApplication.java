@@ -8,18 +8,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.appsdeveloperblog.app.ws.security.AppProperties;
-import com.appsdeveloperblog.app.ws.shared.AmazonSES;
 
 @SpringBootApplication
-public class MobileAppWsApplication extends SpringBootServletInitializer {
+public class MobileAppWsApplication  extends SpringBootServletInitializer {
+
+	public static void main(String[] args) {
+		SpringApplication.run(MobileAppWsApplication.class, args);
+	}
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(MobileAppWsApplication.class);
-	}
-	
-	public static void main(String[] args) {
-		SpringApplication.run(MobileAppWsApplication.class, args);
 	}
 	
 	@Bean
@@ -27,11 +26,7 @@ public class MobileAppWsApplication extends SpringBootServletInitializer {
 		return new BCryptPasswordEncoder();
 	}
 	
-	@Bean
-	public AmazonSES getAmazonSES() {
-		return new AmazonSES();
-	}
- 
+	
 	@Bean 
 	public SpringApplicationContext springApplicationContext()
 	{
@@ -42,6 +37,5 @@ public class MobileAppWsApplication extends SpringBootServletInitializer {
 	public AppProperties getAppProperties()
 	{
 		return new AppProperties();
-	}
-	
+	}	
 }
