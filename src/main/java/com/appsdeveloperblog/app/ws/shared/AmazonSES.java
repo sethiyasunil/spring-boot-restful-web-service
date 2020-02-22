@@ -77,7 +77,7 @@ public class AmazonSES {
 						.withSubject(new Content().withCharset("UTF-8").withData(SUBJECT)))
 				.withSource(FROM);
 
-		client.sendEmail(request);
+		//client.sendEmail(request);
 
 		System.out.println("Email sent!");
 

@@ -15,6 +15,8 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 //import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.appsdeveloperblog.app.ws.io.enums.RoleTypes;
 import com.appsdeveloperblog.app.ws.service.AddressService;
 import com.appsdeveloperblog.app.ws.service.UserService;
 import com.appsdeveloperblog.app.ws.shared.dto.AddressDTO;
@@ -104,6 +107,9 @@ public class UserController {
 		return returnValue;
 	}
 
+	//@Secured("ROLE_ADMIN")
+	@PreAuthorize("hasRole('ADMIN') and #id == principal.userId")
+	//@PreAuthorize("hasAuthorize('ROLE_ADMIN')")
 	@DeleteMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	@ApiImplicitParams({
 		@ApiImplicitParam(name="authorization", value="${userController.authorizationHeader.description}", paramType="header")

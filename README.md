@@ -11,6 +11,21 @@ A spring boot mvc application
  - Generate documentation with Swagger - http://localhost:8080/mobile-app-ws/swagger-ui.html
  -
  - CORS setup in WebConfig.java, WsSecurity.java  
+ -
+ - Secure endpoints 
+ -- SEE WSSecurity.config()
+ --OR on Controllers
+ ---@PreAuthorize("hasRole('ROLE_ADMIN)')")
+ ---@PreAuthorize("hasAuthority('hasRole(DELETE_AUTHORITY)')") | @EnableGlobalMethodSecurity(prePostEnabled = true) enable it
+ ---@Secured("ROLE_ADMIN")   | @EnableGlobalMethodSecurity(securedEnabled = true) enable it
+ -
+ -
+ - H2 console - http://localhost:8080/mobile-app-ws/h2-console
+select * from users;
+select * from users_roles;
+select * from roles;
+select * from roles_authorities;
+select * from authorities;
  
  Refer <b>https://github.com/sethiyasunil/spring-boot-verification-service</b>
  It offers html page to reset password and email verification
