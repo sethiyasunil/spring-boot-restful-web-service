@@ -8,7 +8,7 @@ A spring boot mvc application
  - Test cases with mokito and junit 5
  - Test REST endpoints with REST Assured
  -
- - Generate documentation with Swagger and Spring Fox
+ - Generate documentation with Swagger - http://localhost:8080/mobile-app-ws/swagger-ui.html
  -
  - CORS setup in WebConfig.java, WsSecurity.java  
  
